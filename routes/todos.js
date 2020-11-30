@@ -1,36 +1,39 @@
 const express = require('express');
 const router = express.Router();
 
+const authenticateToken = require('../utils/middleware');
+
 const Todo = require('../models/todo');
 
-router.get('/', (req, res) => {
-  Todo.find({})
+router.get('/', authenticateToken, (req, res) => {
+  Todo.find({ user: req.user._id })
     .sort({ isPinned: -1 })
     .then((result) => {
       res.send({ todos: result });
     });
 });
 
-router.post('/', (req, res) => {
+router.post('/', authenticateToken, (req, res) => {
   if (req.body.text.trim() !== '') {
-    const todo = new Todo(req.body);
-    todo.save().then(() => res.status(201).end());
+    const todo = { text: req.body.text, user: req.user };
+    new Todo(todo).save().then(() => res.status(201).end());
   } else res.status(400).end();
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', authenticateToken, (req, res) => {
   Todo.findByIdAndUpdate(req.params.id, req.body.todo).then(() =>
     res.status(200).end()
   );
 });
 
-router.delete('/delete_todos', (req, res) => {
-  Todo.deleteMany({ isCompleted: req.body.isCompleted }).then(() =>
-    res.status(200).end()
-  );
+router.delete('/delete_todos', authenticateToken, (req, res) => {
+  Todo.deleteMany({
+    user: req.user._id,
+    isCompleted: req.body.isCompleted,
+  }).then(() => res.status(200).end());
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', authenticateToken, (req, res) => {
   Todo.findByIdAndRemove(req.params.id).then(() => res.status(200).end());
 });
 

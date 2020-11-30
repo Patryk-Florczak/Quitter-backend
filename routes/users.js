@@ -1,20 +1,25 @@
 const express = require('express');
+const jwt = require('jsonwebtoken');
 const router = express.Router();
+
+const { SECRET_KEY } = require('../config');
+const authenticateToken = require('../utils/middleware');
 
 const User = require('../models/user');
 
-router.get('/', (req, res) => {
-  User.find({}).then((result) => {
-    console.log(result);
-    // res.send({ todos: result });
+// Route to get user (will probably turn into login later)
+router.get('/', authenticateToken, (req, res) => {
+  User.find({ _id: req.user._id }).then((user) => {
+    res.send(user);
   });
 });
 
+// TODO ogarnąć fakt że po pierwszym zalogowaniu nie jesteśmy zaautentykowani
 router.post('/', (req, res) => {
-  const newUser = new User();
-  console.log(newUser);
-  res.send({ newUser });
-  // newUser.save().then(() => res.status(201).end());
+  const user = new User();
+  const token = jwt.sign({ user }, SECRET_KEY);
+  res.send({ token: token });
+  user.save().then(() => res.status(201).end());
 });
 
 module.exports = router;

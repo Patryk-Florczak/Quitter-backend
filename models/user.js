@@ -1,12 +1,5 @@
 const mongoose = require('mongoose');
 
-const User = new mongoose.Schema({
-  todos: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Todo',
-    },
-  ],
-});
+const User = new mongoose.Schema({});
 
 module.exports = mongoose.model('user', User);
