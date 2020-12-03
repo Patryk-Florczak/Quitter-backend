@@ -13,16 +13,21 @@ router.get('/', authenticateToken, (req, res) => {
     });
 });
 
-router.post('/', authenticateToken, (req, res) => {
+router.post('/', authenticateToken, async (req, res) => {
   if (req.body.text.trim() !== '') {
     const todo = { text: req.body.text, user: req.user };
-    new Todo(todo).save().then(() => res.status(201).end());
+    const newTodo = await new Todo(todo).save();
+    res.status(201).send(newTodo);
   } else res.status(400).end();
 });
 
 router.put('/:id', authenticateToken, (req, res) => {
   Todo.findByIdAndUpdate(req.params.id, req.body.todo).then(() =>
-    res.status(200).end()
+    Todo.find({ user: req.user._id })
+      .sort({ isPinned: -1 })
+      .then((result) => {
+        res.send({ todos: result });
+      })
   );
 });
 

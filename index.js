@@ -18,8 +18,8 @@ const corsOptions = {
 const todosRoute = require('./routes/todos');
 const userRoute = require('./routes/users');
 
-app.use('/api/todos', cors(corsOptions), todosRoute);
-app.use('/api/user', cors(corsOptions), userRoute);
+app.use('/api/todos', cors(), todosRoute);
+app.use('/api/user', cors(), userRoute);
 
 const PORT = process.env.PORT || 3000;
 
