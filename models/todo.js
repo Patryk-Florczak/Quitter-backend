@@ -1,9 +1,18 @@
 const mongoose = require('mongoose');
 
 const Todo = new mongoose.Schema({
-  id: Number,
-  isCompleted: Boolean,
-  isPinned: Boolean,
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },
+  isCompleted: {
+    type: Boolean,
+    default: false,
+  },
+  isPinned: {
+    type: Boolean,
+    default: false,
+  },
   text: String,
 });
 
