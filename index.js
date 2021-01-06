@@ -1,18 +1,13 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const { MONGODB, ORIGIN } = require('./config.js');
 const cors = require('cors');
 
 const app = express();
 
+require('dotenv').config();
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
-// CORS config
-const corsOptions = {
-  origin: ORIGIN,
-  optionsSuccessStatus: 200,
-};
 
 // ROUTES
 const todosRoute = require('./routes/todos');
@@ -24,7 +19,7 @@ app.use('/api/user', cors(), userRoute);
 const PORT = process.env.PORT || 3000;
 
 mongoose
-  .connect(MONGODB, {
+  .connect(process.env.MONGODB, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
