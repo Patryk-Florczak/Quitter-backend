@@ -12,7 +12,13 @@ router.get('/', authenticateToken, (req, res) => {
 });
 
 router.post('/', authenticateToken, async (req, res) => {
-  console.log(req.body);
+  const bookmark = {
+    title: req.body.bookmark.title,
+    link: req.body.bookmark.link,
+    user: req.user,
+  };
+  const newBookmark = await new Bookmark(bookmark).save();
+  res.status(201).send(newBookmark);
 });
 
 module.exports = router;
