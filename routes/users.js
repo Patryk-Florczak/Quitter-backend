@@ -19,4 +19,14 @@ router.post('/', (req, res) => {
   user.save().then(() => res.status(201).end());
 });
 
+router.put('/', authenticateToken, (req, res) => {
+  User.findOne({ _id: req.user._id }, (err, user) => {
+    // TODO error handling
+    user.bookmarkCategories.push(req.body.category);
+    user.save().then((user) => {
+      res.send({ user: [user] });
+    });
+  });
+});
+
 module.exports = router;
