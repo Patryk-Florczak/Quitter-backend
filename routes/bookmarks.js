@@ -15,6 +15,7 @@ router.post('/', authenticateToken, async (req, res) => {
   const bookmark = {
     title: req.body.bookmark.title,
     link: req.body.bookmark.link,
+    category: req.body.bookmark.category,
     user: req.user,
   };
   const newBookmark = await new Bookmark(bookmark).save();
