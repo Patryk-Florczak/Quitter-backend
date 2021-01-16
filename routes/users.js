@@ -7,7 +7,7 @@ const authenticateToken = require('../utils/middleware');
 const User = require('../models/user');
 
 router.get('/', authenticateToken, (req, res) => {
-  User.find({ _id: req.user._id }).then((user) => {
+  User.findOne({ _id: req.user._id }).then((user) => {
     res.send({ user: user });
   });
 });
@@ -24,7 +24,7 @@ router.put('/', authenticateToken, (req, res) => {
     // TODO error handling
     user.bookmarkCategories.push(req.body.category);
     user.save().then((user) => {
-      res.send({ user: [user] });
+      res.send({ user: user });
     });
   });
 });
